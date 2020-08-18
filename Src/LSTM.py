@@ -14,7 +14,7 @@ PATH_AZURE = 'C:/Users/ThinkKING/OneDrive/Desktop/Github/pretraining_auto_scalin
 FILE="3_mins.csv"
 NEUROL = 4
 BATCH_SIZE = 49
-EPOCHS = 3000
+EPOCHS = 1000
 FEATURE = [3]
 RATIO = 0.75
 
@@ -122,8 +122,9 @@ a = np.arange(Y_test.shape[0])
 
 Y_predict=scaler.inverse_transform(Y_predict)
 Y_test=scaler.inverse_transform(Y_test)
-print (Y_predict)
-print (Y_test)
-plt.plot(a,Y_predict)
-plt.plot(a,Y_test)
+print ("Y_predict :", Y_predict)
+print ("Y_test",Y_test)
+print ("error test dataset :", model.evaluate(X_test, Y_test, verbose=0))
+plt.plot(a, Y_predict)
+plt.plot(a, Y_test)
 plt.show()

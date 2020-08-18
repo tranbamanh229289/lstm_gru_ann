@@ -11,12 +11,12 @@ from math import sqrt
 
 PATH_GOOGLE_TRACE = 'C:/Users/ThinkKING/OneDrive/Desktop/Github/pretraining_auto_scaling_ng/data/input_data/google_trace/1_job/'
 PATH_AZURE = 'C:/Users/ThinkKING/OneDrive/Desktop/Github/pretraining_auto_scaling_ng/data/input_data/azure/'
-FILE="3_mins.csv"
+FILE="5_mins.csv"
 NEUROL = 4
 BATCH_SIZE = 49
-EPOCHS = 3000
+EPOCHS = 1000
 FEATURE = [3]
-RATIO = 0.75
+RATIO = 0.8
 
 class Preprocess:
 
@@ -119,11 +119,12 @@ X_test, Y_test = a.windows_sliding(2, test)
 model = fit_lstm(X_train, Y_train, NEUROL, BATCH_SIZE, EPOCHS)
 Y_predict = model.predict(X_test)
 a = np.arange(Y_test.shape[0])
-
+print (model.evaluate(X_test,Y_test,verbose=2))
 Y_predict=scaler.inverse_transform(Y_predict)
 Y_test=scaler.inverse_transform(Y_test)
-print ("Predict :",Y_predict)
-print ("Values: ",Y_test)
-plt.plot(a,Y_predict)
-plt.plot(a,Y_test)
+print ("Predict Y_test :", Y_predict)
+print ("Y_test: ", Y_test)
+
+plt.plot(a, Y_predict)
+plt.plot(a, Y_test)
 plt.show()

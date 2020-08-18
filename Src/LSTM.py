@@ -8,15 +8,16 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM
 from tensorflow.keras.layers import Dense
 from math import sqrt
+from config import *
 
 PATH_GOOGLE_TRACE = 'C:/Users/ThinkKING/OneDrive/Desktop/Github/pretraining_auto_scaling_ng/data/input_data/google_trace/1_job/'
 PATH_AZURE = 'C:/Users/ThinkKING/OneDrive/Desktop/Github/pretraining_auto_scaling_ng/data/input_data/azure/'
-FILE="3_mins.csv"
+FILE="5_mins.csv"
 NEUROL = 4
 BATCH_SIZE = 49
 EPOCHS = 1000
 FEATURE = [3]
-RATIO = 0.75
+RATIO = 0.8
 
 class Preprocess:
 

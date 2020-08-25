@@ -7,22 +7,29 @@ class Config :
     DATASET_2_DIR=os.path.join(PATH_FILE_DATA,'azure','5_mins.csv')
     FEATURE=[3]
     RATIO_TRAIN_TEST=0.8
-    RATIO_TRAIN_VAL=0.8
+    RATIO_TRAIN_VAL= 0.8
 
-    LSTM={'batch_size':49,
+    LSTM={'batch_size':1,
           'neurol':4,
-          'epochs':100,
+          'epochs':10,
           'lock_back':2,
           'loss': 'mse',
           'optimizer':'adam'
           }
-    GRU={'batch_size':49,
+    GRU={'batch_size':1,
           'neurol':4,
-          'epochs':100,
+          'epochs':10,
           'lock_back':2,
           'loss': 'mse',
-          'optimizer':'adam'
-          }
+          'optimizer':'adam'}
+    MLP={
+        'lock_back':2,
+        'epochs':10,
+        'unit1':100,
+        'unit2':1
+
+    }
+
 
 
 

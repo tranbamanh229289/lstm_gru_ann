@@ -24,11 +24,12 @@ class Config :
           'optimizer':'adam'}
     MLP={
         'lock_back':2,
-        'epochs':10,
+        'epochs':1,
         'unit1':100,
-        'unit2':1
-
-    }
+        'unit2':1,
+        'loss':'mse',
+        'optimizer':'adam'
+}
 
 
 

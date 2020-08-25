@@ -64,5 +64,6 @@ class Visualization :
         plt.ylabel("RAM")
         plt.show()
 
-MLP.accuracy(MLP.X_test,MLP.Y_test,MLP.model)
-
+#MLP.accuracy(MLP.X_test,MLP.Y_test,MLP.model)
+#LSTM.accuracy(LSTM.X_test,LSTM.Y_test,LSTM.scaler,LSTM.model)
+GRU.accuracy(GRU.X_test,GRU.Y_test,GRU.scaler,GRU.model)

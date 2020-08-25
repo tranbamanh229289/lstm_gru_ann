@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from math import sqrt
+from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 from tensorflow.keras.models import Sequential
@@ -50,12 +52,12 @@ class Preprocess:
             dataY.append(b)
         return np.array(dataX), np.array(dataY)
 
-def accuracy (X,Y, scaler,model):
+def accuracy (X,Y,model):
     Y_predict = model.predict(X)
     a = np.arange(X.shape[0])
     print("Y_predict :", Y_predict)
     print("Y ", Y)
-    print("error :", model.evaluate(X, Y, verbose=0))
+    print("error :", sqrt(mean_squared_error(Y_test,Y_predict)))
     plt.plot(a, Y_predict)
     plt.plot(a, Y)
     plt.show()

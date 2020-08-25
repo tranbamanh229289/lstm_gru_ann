@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from math import sqrt
+from sklearn.metrics import mean_squared_error
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
 from tensorflow.keras.models import Sequential
@@ -65,7 +67,7 @@ def fit_gru(x_train, y_train,x_val,y_val, neurol, batch_size, nb_epochs):
     model = Sequential()
     model.add(GRU(neurol, batch_input_shape=(batch_size, X.shape[1], X.shape[2]), stateful=True))
     model.add(Dense(1))
-    model.compile(loss='mean_squared_error', optimizer='adam')
+    model.compile(loss='mse',optimizer='adam')
     for i in range(nb_epochs):
         model.fit(X, y, epochs=1, batch_size=batch_size,validation_data=(x_val,y_val), verbose=2, shuffle=False)
         model.reset_states()
@@ -78,7 +80,7 @@ def accuracy (X,Y, scaler,model):
     Y = scaler.inverse_transform(Y)
     print("Y_predict :", Y_predict)
     print("Y ", Y)
-    print("error :", model.evaluate(X, Y, verbose=0))
+    print("error :", sqrt(mean_squared_error(Y_test,Y_predict)))
     plt.plot(a, Y_predict)
     plt.plot(a, Y)
     plt.show()

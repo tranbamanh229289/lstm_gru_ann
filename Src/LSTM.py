@@ -10,87 +10,41 @@ from tensorflow.keras.layers import LSTM
 from tensorflow.keras.layers import Dense
 from config import *
 
-PATH_GOOGLE_TRACE = Config.DATASET_1_DIR
-PATH_AZURE = Config.DATASET_2_DIR
-
 NEUROL = Config.LSTM['neurol']
 BATCH_SIZE = Config.LSTM['batch_size']
 EPOCHS = Config.LSTM['epochs']
-FEATURE = Config.FEATURE
-RATIO_TRAIN_TEST = Config.RATIO_TRAIN_TEST
-RATIO_TRAIN_VAL=Config.RATIO_TRAIN_VAL
 
-class Preprocess:
-
-    def __init__(self, path, feature, ratio_train_test,ratio_train_val):
-        self.path = path
-        self.index = feature
-        self.ratio_train_test = ratio_train_test
-        self.ratio_train_val=ratio_train_val
-        self.data = pd.read_csv(self.path, header=None, parse_dates=True, squeeze=True)
-
-    def choice_feature(self):
-        data = self.data
-        df = data.iloc[:, self.index]
-        return df
-
-    def scale(self):
-        data = self.choice_feature()
-        scaler = MinMaxScaler(feature_range=(0, 1))
-        dataset = scaler.fit_transform(data)
-        return pd.DataFrame(dataset), scaler
-
-    def split(self):
-        data, scaler = self.scale()
-        n = int(data.shape[0] * self.ratio_train_test)
-        k = int(n * self.ratio_train_val)
-        train = data.iloc[:k, :]
-        val = data.iloc[k:n, :]
-        test = data.iloc[n:, :]
-        return val, train, test
-
-    def windows_sliding(self, lock_back, data):
-        data = data.values
-        dataX = []
-        dataY = []
-        for i in range(data.shape[0] - lock_back ):
-            a = data[i:i + lock_back, :]
-            b = data[i + lock_back, :]
-            dataX.append(a)
-            dataY.append(b)
-        return np.array(dataX), np.array(dataY)
-
-
-def fit_lstm(x_train, y_train,x_val,y_val, neurol, batch_size, nb_epochs):
+def fit_model(x_train, y_train, x_val, y_val, neurol, batch_size, nb_epochs):
     X = x_train
     y = y_train
     model = Sequential()
     model.add(LSTM(neurol, batch_input_shape=(batch_size, X.shape[1], X.shape[2]), stateful=True))
     model.add(Dense(1))
-    model.compile(loss='mse',optimizer='adam')
+    model.compile(loss='mse', optimizer='adam')
     for i in range(nb_epochs):
-        model.fit(X, y, epochs=1, batch_size=batch_size,validation_data=(x_val,y_val), verbose=2, shuffle=False)
+        model.fit(X, y, epochs=1, batch_size=batch_size, validation_data=(x_val, y_val), verbose=2, shuffle=False)
         model.reset_states()
     return model
 
-def accuracy (X,Y, scaler,model):
+def accuracy(X, Y, scaler, model):
     Y_predict = model.predict(X)
     a = np.arange(X.shape[0])
     Y_predict = scaler.inverse_transform(Y_predict)
     Y = scaler.inverse_transform(Y)
-    print("Y_predict :", Y_predict)
-    print("Y ", Y)
-    print("error :", sqrt(mean_squared_error(Y_test,Y_predict)))
+    #print("Y_predict :", Y_predict)
+    #print("Y ", Y)
+    print("error :", sqrt(mean_squared_error(Y, Y_predict)))
     plt.plot(a, Y_predict)
     plt.plot(a, Y)
     plt.show()
 
-a = Preprocess(PATH_GOOGLE_TRACE, FEATURE, RATIO_TRAIN_TEST,RATIO_TRAIN_VAL)
-val,train, test = a.split()
-df, scaler = a.scale()
-X_train, Y_train = a.windows_sliding(Config.LSTM['lock_back'], train)
-X_test, Y_test = a.windows_sliding(Config.LSTM['lock_back'], test)
-X_val,Y_val=a.windows_sliding(Config.LSTM['lock_back'],val)
-#model = fit_lstm(X_train, Y_train,X_val,Y_val, NEUROL, BATCH_SIZE, EPOCHS)
-print (X_val)
-print (Y_val)
+def input_data(a):
+    val, train, test = a.split_gru_lstm()
+    X_train, Y_train = a.windows_sliding(Config.GRU['lock_back'], train)
+    X_test, Y_test = a.windows_sliding(Config.GRU['lock_back'], test)
+    X_val, Y_val = a.windows_sliding(Config.GRU['lock_back'], val)
+    return X_train,Y_train,X_test,Y_test,X_val,Y_val
+
+
+
+
